@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>The Legend of Leon — Official Soundtrack Exporter</title>
+<style>
+  body {
+    margin: 0; min-height: 100vh; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; background: #11111b;
+    color: #cdd6f4; font-family: "Segoe UI", system-ui, sans-serif;
+  }
+  .card {
+    background: #181825; border: 2px solid #313244; border-radius: 12px;
+    padding: 32px 40px; text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+  }
+  h1 { color: #f9e2af; margin: 0 0 6px; font-size: 24px; }
+  p { color: #a6adc8; margin: 0 0 24px; font-size: 14px; }
+  button {
+    background: #a6e3a1; color: #11111b; border: none; border-radius: 8px;
+    padding: 14px 28px; font-size: 16px; font-weight: 800; cursor: pointer;
+    transition: transform 0.1s ease, background 0.15s ease;
+  }
+  button:hover { background: #94e2d5; transform: translateY(-1px); }
+  button:active { transform: translateY(0); }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <h1>THE LEGEND OF LEON — OST</h1>
+  <p>80s Synthwave Edition (2 Full Cycles + 20s Fade-Out Intro • ~3:08 • WAV)</p>
+  <button id="dl-btn">⬇ Download Soundtrack (.WAV)</button>
+</div>
+
+<script>
+function generateTrackSamples() {
+  const A2 = 110.00, F2 = 87.31, C3 = 130.81, G2 = 98.00, D2 = 73.42, E2 = 82.41;
+  const C4 = 261.63, D4 = 293.66, E4 = 329.63, F4 = 349.23, G4 = 392.00;
+  const A4 = 440.00, B4 = 493.88, C5 = 523.25, D5 = 587.33, E5 = 659.25, F5 = 698.46, G5 = 783.99, A5 = 880.00;
+
+  const partA = [
+    [E4,A2,1],[0,A2,0],[A4,A2,2],[B4,A2,0],[C5,A2,1],[B4,A2,0],[A4,A2,2],[E4,A2,0],
+    [F4,F2,1],[0,F2,0],[A4,F2,2],[C5,F2,0],[B4,F2,1],[A4,F2,0],[G4,F2,2],[F4,F2,0],
+    [E4,C3,1],[0,C3,0],[G4,C3,2],[C5,C3,0],[D5,C3,1],[C5,C3,0],[B4,C3,2],[G4,C3,0],
+    [D4,G2,1],[0,G2,0],[G4,G2,2],[B4,G2,0],[A4,G2,1],[G4,G2,0],[E4,G2,2],[D4,G2,0],
+    [A4,A2,1],[E4,A2,0],[C4,A2,2],[E4,A2,0],[A4,A2,1],[B4,A2,0],[C5,A2,2],[E5,A2,0],
+    [C5,F2,1],[A4,F2,0],[F4,F2,2],[A4,F2,0],[C5,F2,1],[D5,F2,0],[C5,F2,2],[A4,F2,0],
+    [D5,D2,1],[A4,D2,0],[F4,D2,2],[A4,D2,0],[D5,D2,1],[C5,D2,0],[B4,D2,2],[A4,D2,0],
+    [B4,E2,1],[0,E2,0],[E5,E2,2],[0,E2,0],[D5,E2,1],[C5,E2,0],[B4,E2,2],[G4,E2,0]
+  ];
+
+  const partB = [
+    [A4,F2,1],[A4,F2,0],[0,F2,0],[G4,F2,0],[E4,F2,0],[E4,F2,0],[0,F2,0],[0,F2,0],
+    [B4,G2,1],[B4,G2,0],[0,G2,0],[A4,G2,0],[G4,G2,0],[G4,G2,0],[0,G2,0],[0,G2,0],
+    [C5,A2,1],[C5,A2,0],[0,A2,0],[B4,A2,0],[A4,A2,0],[A4,A2,0],[E4,A2,0],[0,A2,0],
+    [G4,C3,1],[G4,C3,0],[0,C3,0],[E4,C3,0],[G4,C3,0],[G4,C3,0],[0,C3,0],[0,C3,0],
+    [A4,F2,1],[0,F2,0],[C5,F2,0],[0,F2,0],[A4,F2,0],[0,F2,0],[G4,F2,0],[0,F2,0],
+    [B4,G2,1],[0,G2,0],[D5,G2,0],[0,G2,0],[B4,G2,0],[0,G2,0],[A4,G2,0],[0,G2,0],
+    [F4,D2,1],[F4,D2,0],[A4,D2,0],[0,D2,0],[D5,D2,0],[0,D2,0],[C5,D2,0],[B4,D2,0],
+    [G4,E2,1],[G4,E2,0],[B4,E2,0],[B4,E2,0],[E4,E2,0],[0,E2,0],[0,E2,0],[0,E2,0]
+  ];
+
+  const partD = [
+    [A4,F2,1],[A4,F2,0],[0,F2,2],[G4,F2,0],[E4,F2,1],[E4,F2,0],[G4,F2,2],[0,F2,0],
+    [B4,G2,1],[B4,G2,0],[0,G2,2],[A4,G2,0],[G4,G2,1],[G4,G2,0],[B4,G2,2],[0,G2,0],
+    [C5,A2,1],[C5,A2,0],[0,A2,2],[B4,A2,0],[A4,A2,1],[A4,A2,0],[E4,A2,2],[G4,A2,0],
+    [G4,C3,1],[G4,C3,0],[0,C3,2],[E4,C3,0],[G4,C3,1],[A4,C3,0],[B4,C3,2],[0,C3,0],
+    [A4,F2,1],[0,F2,0],[C5,F2,2],[0,F2,0],[A4,F2,1],[C5,F2,0],[G4,F2,2],[A4,F2,0],
+    [B4,G2,1],[0,G2,0],[D5,G2,2],[0,G2,0],[B4,G2,1],[D5,G2,0],[A4,G2,2],[B4,G2,0],
+    [F4,D2,1],[A4,D2,0],[D5,D2,2],[0,D2,0],[D5,D2,1],[C5,D2,0],[B4,D2,2],[A4,D2,0],
+    [G4,E2,1],[B4,E2,0],[E5,E2,2],[B4,E2,0],[D5,E2,1],[C5,E2,2],[B4,E2,2],[G4,E2,0]
+  ];
+
+  const partC = [
+    [E4,A2,1],[0,A2,0],[A4,A2,0],[B4,A2,0],[C5,A2,1],[B4,A2,0],[C5,A2,2],[D5,A2,0],
+    [C5,F2,1],[0,F2,0],[A4,F2,2],[C5,F2,0],[D5,F2,1],[C5,F2,0],[D5,F2,2],[E5,F2,0],
+    [E5,C3,1],[0,C3,0],[C5,C3,2],[E5,C3,0],[G5,C3,1],[E5,C3,0],[D5,C3,2],[C5,C3,0],
+    [D5,G2,1],[0,G2,0],[B4,G2,2],[D5,G2,0],[E5,G2,1],[D5,G2,0],[B4,G2,2],[G4,G2,0],
+    [A4,A2,1],[C5,A2,0],[E5,A2,2],[C5,A2,0],[A5,A2,1],[G5,A2,0],[E5,A2,2],[C5,A2,0],
+    [F5,F2,1],[C5,F2,0],[A4,F2,2],[C5,F2,0],[F5,F2,1],[E5,F2,0],[D5,F2,2],[C5,F2,0],
+    [D5,D2,1],[F5,D2,2],[A5,D2,1],[G5,D2,2],[F5,E2,1],[E5,E2,2],[D5,E2,2],[C5,E2,2],
+    [B4,E2,1],[E5,E2,2],[G5,E2,3],[E5,E2,3],[B4,E2,1],[D5,E2,3],[E5,E2,3],[G5,E2,3]
+  ];
+
+  const singleCycle = [
+    ["B", partB], ["B", partB], ["D", partD], ["C", partC],
+    ["A", partA], ["A", partA], ["A", partA], ["C", partC]
+  ];
+
+  const sampleRate = 22050;
+  const stepSeconds = 0.165;
+  const samplesPerStep = Math.floor(sampleRate * stepSeconds);
+
+  // 2 full cycles + 122 steps (~20.13 seconds) into the 3rd cycle for a smooth fade-out
+  const fadeSeconds = 20.0;
+  const fadeSteps = Math.ceil(fadeSeconds / stepSeconds); // 122 steps (~20.1s)
+
+  const allSteps = [];
+  for (let l = 0; l < 2; l++) {
+    for (const [type, pattern] of singleCycle) {
+      for (let i = 0; i < pattern.length; i++) {
+        const [lead, bass, drum] = pattern[i];
+        allSteps.push({ lead, bass, drum, type, localStep: i });
+      }
+    }
+  }
+
+  // Append first 122 steps of the 3rd cycle (B -> B)
+  const thirdCycleSteps = [];
+  for (const [type, pattern] of singleCycle) {
+    for (let i = 0; i < pattern.length; i++) {
+      const [lead, bass, drum] = pattern[i];
+      thirdCycleSteps.push({ lead, bass, drum, type, localStep: i });
+    }
+  }
+  for (let i = 0; i < fadeSteps; i++) {
+    allSteps.push(thirdCycleSteps[i]);
+  }
+
+  const totalSamples = allSteps.length * samplesPerStep;
+  const fadeStartSample = (allSteps.length - fadeSteps) * samplesPerStep;
+  const fadeSampleLength = totalSamples - fadeStartSample;
+
+  const pcm = new Int16Array(totalSamples);
+  let seed = 1984;
+  const rand = () => { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; };
+
+  let ptr = 0;
+  for (let s = 0; s < allSteps.length; s++) {
+    const { lead, bass, drum, type, localStep } = allSteps[s];
+    let sectionGain = 1.0, sawMix = 1.0, softStyle = false;
+
+    if (type === "B") {
+      sectionGain = 0.64; sawMix = 0.20; softStyle = true;
+    } else if (type === "D") {
+      const dProg = localStep / 63.0;
+      sectionGain = 0.64 + 0.14 * dProg;
+      sawMix = 0.20 + 0.25 * dProg;
+      softStyle = localStep < 32;
+    } else if (type === "C") {
+      const cProg = localStep / 63.0;
+      sectionGain = 0.76 + 0.39 * cProg;
+      sawMix = 0.45 + 0.55 * cProg;
+    }
+
+    const bassFreq = (!softStyle && s % 2 === 1) ? bass * 2.0 : bass;
+
+    for (let i = 0; i < samplesPerStep; i++) {
+      const t = i / sampleRate;
+      const stepProg = i / samplesPerStep;
+
+      let leadSig = 0;
+      if (lead > 0) {
+        const attack = softStyle ? 4.0 : 12.0;
+        const env = Math.min(1.0, stepProg * attack) * (1.0 - stepProg * (softStyle ? 0.15 : 0.35));
+        const saw1 = 2.0 * ((t * lead * 0.996) - Math.floor(t * lead * 0.996 + 0.5));
+        const saw2 = 2.0 * ((t * lead * 1.004) - Math.floor(t * lead * 1.004 + 0.5));
+        const brightSaw = (saw1 + saw2) * 0.5;
+        const softSine = Math.sin(2.0 * Math.PI * lead * t);
+        leadSig = ((brightSaw * sawMix) + (softSine * (1.0 - sawMix))) * 0.065 * env * sectionGain;
+      }
+
+      const bassEnv = Math.max(0.15, 1.0 - stepProg * (softStyle ? 0.55 : 0.85));
+      const bassSaw = 2.0 * ((t * bassFreq) - Math.floor(t * bassFreq + 0.5));
+      const bassSub = Math.sin(2.0 * Math.PI * bassFreq * t);
+      const bassSig = ((bassSaw * 0.5 * sawMix) + (bassSub * (1.0 - 0.5 * sawMix))) * 0.11 * bassEnv * sectionGain;
+
+      let drumSig = 0;
+      if (drum === 1 && stepProg < 0.55) {
+        const kickFreq = 135.0 * Math.exp(-stepProg * 14.0) + 38.0;
+        const kickVol = softStyle ? 0.095 : 0.16 * sectionGain;
+        drumSig = Math.sin(2.0 * Math.PI * kickFreq * t) * kickVol * (1.0 - stepProg / 0.55);
+      } else if (drum === 2 && stepProg < 0.65) {
+        const noise = rand() * 2.0 - 1.0;
+        const snareVol = type === "D" ? 0.055 : 0.08;
+        drumSig = noise * snareVol * sectionGain * (1.0 - stepProg / 0.65);
+      } else if (drum === 3) {
+        const subProg = (stepProg * 2.0) % 1.0;
+        if (subProg < 0.75) {
+          const noise = rand() * 2.0 - 1.0;
+          drumSig = noise * 0.085 * sectionGain * (1.0 - subProg / 0.75);
+        }
+      }
+
+      let fadeMult = 1.0;
+      if (ptr >= fadeStartSample) {
+        const p = (ptr - fadeStartSample) / fadeSampleLength;
+        fadeMult = Math.pow(1.0 - p, 1.8); // Smooth natural-sounding fade to 0
+      }
+
+      const clamped = Math.max(-0.95, Math.min(0.95, (leadSig + bassSig + drumSig) * fadeMult));
+      pcm[ptr++] = Math.round(clamped * 32767);
+    }
+  }
+  return { pcm, sampleRate };
+}
+
+function encodeWavBlob(pcm, sampleRate) {
+  const dataBytes = pcm.length * 2;
+  const buffer = new ArrayBuffer(44 + dataBytes);
+  const view = new DataView(buffer);
+  const writeStr = (off, str) => { for (let i = 0; i < str.length; i++) view.setUint8(off + i, str.charCodeAt(i)); };
+
+  writeStr(0, "RIFF");
+  view.setUint32(4, 36 + dataBytes, true);
+  writeStr(8, "WAVE");
+  writeStr(12, "fmt ");
+  view.setUint32(16, 16, true);
+  view.setUint16(20, 1, true);
+  view.setUint16(22, 1, true);
+  view.setUint32(24, sampleRate, true);
+  view.setUint32(28, sampleRate * 2, true);
+  view.setUint16(32, 2, true);
+  view.setUint16(34, 16, true);
+  writeStr(36, "data");
+  view.setUint32(40, dataBytes, true);
+
+  new Int16Array(buffer, 44).set(pcm);
+  return new Blob([buffer], { type: "audio/wav" });
+}
+
+document.getElementById("dl-btn").addEventListener("click", () => {
+  const { pcm, sampleRate } = generateTrackSamples();
+  const blob = encodeWavBlob(pcm, sampleRate);
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "Legend_of_Leon_Synthwave_OST.wav";
+  a.click();
+  URL.revokeObjectURL(url);
+});
+</script>
+</body>
+</html>
