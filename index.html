@@ -75,16 +75,19 @@
 	.story-box {
 	width: 100%;
 	max-width: 640px;
-	min-height: 185px;
+	height: 155px;
+	max-height: 38%;
+	overflow-y: auto;
 	background: #181825;
 	border: 2px solid #45475a;
 	border-radius: 8px;
-	padding: 20px 24px;
+	padding: 14px 20px;
 	font-family: Consolas, "Courier New", monospace;
-	font-size: 14.5px;
-	line-height: 1.55;
+	font-size: 13.5px;
+	line-height: 1.5;
 	white-space: pre-wrap;
 	color: #cdd6f4;
+	scroll-behavior: smooth;
 	}
 	.start-prompt {
 	color: #a6e3a1;
@@ -120,8 +123,8 @@
 	}
 	#credits-roll {
 	position: absolute;
-	left: 20px;
-	width: 760px;
+	left: 5%;
+	width: 90%;
 	text-align: center;
 	}
 	.cr-h1 { color: #a6e3a1; font-size: 32px; font-weight: 900; margin-bottom: 6px; }
@@ -364,7 +367,7 @@ class RetroAudio {
     this.musicSource = null;
     this.buffers = {};
     this.isMuted = false;
-    this.volume = 0.75;
+    this.volume = 0.95;
     this.isPlayingMusic = false;
   }
 
@@ -376,7 +379,7 @@ class RetroAudio {
     const AudioCtx = window.AudioContext || window.webkitAudioContext;
     this.ctx = new AudioCtx();
     this.musicGain = this.ctx.createGain();
-    this.musicGain.gain.value = this.isMuted ? 0 : this.volume;
+    this.musicGain.gain.value = this.isMuted ? 0 : this.volume * 1.45;
     this.musicGain.connect(this.ctx.destination);
 
     this.buffers.bgm = this.build80sSynthwaveLoop();
@@ -410,7 +413,7 @@ class RetroAudio {
   toggleMusic() {
     this.init();
     this.isMuted = !this.isMuted;
-    this.musicGain.gain.value = this.isMuted ? 0 : this.volume;
+    this.musicGain.gain.value = this.isMuted ? 0 : this.volume * 1.45;
     if (!this.isMuted && !this.isPlayingMusic) this.startMusic();
   }
 
@@ -418,7 +421,7 @@ class RetroAudio {
     this.init();
     if (this.isMuted && delta > 0) this.isMuted = false;
     this.volume = Math.max(0, Math.min(1, this.volume + delta));
-    this.musicGain.gain.value = this.isMuted ? 0 : this.volume;
+    this.musicGain.gain.value = this.isMuted ? 0 : this.volume * 1.45;
     return Math.round(this.volume * 100);
   }
 
@@ -435,12 +438,12 @@ class RetroAudio {
     src.start(0);
   }
 
-  playJump() { this.playSfx("jump", 0.35); }
-  playCoin() { this.playSfx("coin", 0.40); }
-  playStomp() { this.playSfx("stomp", 0.45); }
-  playPowerUp() { this.playSfx("powerup", 0.45); }
-  playShrink() { this.playSfx("shrink", 0.45); }
-  playGameOver() { this.stopMusic(); this.playSfx("lose", 0.50); }
+  playJump() { this.playSfx("jump", 0.18); }
+  playCoin() { this.playSfx("coin", 0.20); }
+  playStomp() { this.playSfx("stomp", 0.22); }
+  playPowerUp() { this.playSfx("powerup", 0.24); }
+  playShrink() { this.playSfx("shrink", 0.24); }
+  playGameOver() { this.stopMusic(); this.playSfx("lose", 0.30); }
 
   createBuffer(floatData, sampleRate) {
     const buffer = this.ctx.createBuffer(1, floatData.length, sampleRate);
@@ -803,9 +806,11 @@ const hqSigns = new Array(220, 920, 1620);
   for (let i = 0; i <= INTRO_STORY.length; i++) {
     if (!isTitleScreen || storyFinishedTyping) break;
     el.textContent = INTRO_STORY.slice(0, i);
+    el.scrollTop = el.scrollHeight;
     await new Promise(r => setTimeout(r, 26));
   }
   el.textContent = INTRO_STORY;
+  el.scrollTop = el.scrollHeight;
   storyFinishedTyping = true;
 })();
 
@@ -1457,38 +1462,39 @@ window.addEventListener("keydown", e => {
   if (["ArrowUp","ArrowDown","ArrowLeft","ArrowRight","Space"].includes(e.code)) e.preventDefault();
 
   if (e.code === "F12" && !isCreditsMode) {
-    e.preventDefault();
-    isTitleScreen = false;
-    document.getElementById("title-screen").style.display = "none";
-    startOutroCredits();
-    return;
-  }
+		e.preventDefault();
+		isTitleScreen = false;
+		document.getElementById("title-screen").style.display = "none";
+		startOutroCredits();
+		return;
+		}
 
-  if (isCreditsMode) {
-    if (e.code === "KeyR" || e.code === "Enter") startNewGame();
-    else if (e.code === "KeyM") audio.toggleMusic();
-    else if (e.key === "+" || e.code === "NumpadAdd") adjustVol(0.1);
-    else if (e.key === "-" || e.code === "NumpadSubtract") adjustVol(-0.1);
-    return;
-  }
-// ==================== PART 4B: REMAINING INPUT CONTROLS ====================
-  if (isTitleScreen) {
-    if (e.code === "Enter" || e.code === "Space") {
-      if (!storyFinishedTyping) {
-        storyFinishedTyping = true;
-        document.getElementById("story-text").textContent = INTRO_STORY;
-      } else {
-        isTitleScreen = false;
-        document.getElementById("title-screen").style.display = "none";
-        startNewGame();
-      }
-    } else if (e.code === "KeyM") audio.toggleMusic();
-    else if (e.key === "+" || e.code === "NumpadAdd") adjustVol(0.1);
-    else if (e.key === "-" || e.code === "NumpadSubtract") adjustVol(-0.1);
-    return;
-  }
+		if (isCreditsMode) {
+		if (e.code === "KeyR" || e.code === "Enter") startNewGame();
+		else if (e.code === "KeyM") audio.toggleMusic();
+		else if (e.key === "+" || e.code === "NumpadAdd") adjustVol(0.1);
+		else if (e.key === "-" || e.code === "NumpadSubtract") adjustVol(-0.1);
+		return;
+		}
+		// ==================== PART 4B: REMAINING INPUT CONTROLS ====================
+		if (isTitleScreen) {
+		if (e.code === "Enter" || e.code === "Space") {
+		if (!storyFinishedTyping) {
+		storyFinishedTyping = true;
+		document.getElementById("story-text").textContent = INTRO_STORY;
+		
+		} else {
+		isTitleScreen = false;
+		document.getElementById("title-screen").style.display = "none";
+		startNewGame();
+		}
+		} else if (e.code === "KeyM") audio.toggleMusic();
+		else if (e.key === "+" || e.code === "NumpadAdd") adjustVol(0.1);
+		else if (e.key === "-" || e.code === "NumpadSubtract") adjustVol(-0.1);
+		return;
+		}
 
-  if ((e.code === "KeyE" || e.code === "Enter") && !isGameOver && !isLevelTransition) interactNpc();
+		if ((e.code === "KeyE" || e.code === "Enter") && !isGameOver && !isLevelTransition) interactNpc();
   if (e.code === "ArrowLeft" || e.code === "KeyA") goLeft = true;
   if (e.code === "ArrowRight" || e.code === "KeyD") goRight = true;
 
@@ -1540,7 +1546,10 @@ document.getElementById("title-screen").addEventListener("pointerdown", e => {
   e.preventDefault();
   if (!storyFinishedTyping) {
     storyFinishedTyping = true;
-    document.getElementById("story-text").textContent = INTRO_STORY;
+    //document.getElementById("story-text").textContent = INTRO_STORY;
+	const el = document.getElementById("story-text"); 
+    el.textContent = INTRO_STORY; 
+    el.scrollTop = el.scrollHeight;
   } else {
     const el = document.documentElement;
     if (!document.fullscreenElement && el.requestFullscreen && ("ontouchstart" in window)) {
