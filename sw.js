@@ -1,4 +1,4 @@
-const CACHE_NAME = 'legend-of-leon-v5';
+const CACHE_NAME = 'legend-of-leon-v6';
 const ASSETS = ['./', './index.html', './manifest.json', './icon-192.png', './icon-512.png'];
 
 self.addEventListener('install', e => {

@@ -352,7 +352,7 @@
   <div style="color:#a6adc8; font-size:13px; font-weight:600; margin-top:6px;">The Legend of Leon plays in horizontal widescreen</div>
 </div>
 
-<script>
+
 
 
   <script>
@@ -1493,25 +1493,25 @@ window.addEventListener("keydown", e => {
   if (e.code === "ArrowRight" || e.code === "KeyD") goRight = true;
 
   if ((e.code === "Space" || e.code === "KeyW" || e.code === "ArrowUp") && !isGameOver && !isLevelTransition) {
-    if (isGrounded) {
-      velocityY = JumpStrength; isGrounded = false; audio.playJump();
-    } else if (execModeFrames > 0) {
-      velocityY = JumpStrength * 0.72; audio.playJump();
-    }
-  }
+		if (isGrounded) {
+		velocityY = JumpStrength; isGrounded = false; audio.playJump();
+		} else if (execModeFrames > 0) {
+		velocityY = JumpStrength * 0.72; audio.playJump();
+		}
+		}
 
-  if (e.code === "KeyF" || e.code === "ControlLeft") fireLaser();
-  if (e.key === "+" || e.code === "NumpadAdd") adjustVol(0.1);
-  if (e.key === "-" || e.code === "NumpadSubtract") adjustVol(-0.1);
-  if (e.code === "KeyM") audio.toggleMusic();
-  if (e.code === "KeyR") startNewGame();
-});
+		if (e.code === "KeyF" || e.code === "ControlLeft") fireLaser();
+		if (e.key === "+" || e.code === "NumpadAdd") adjustVol(0.1);
+		if (e.key === "-" || e.code === "NumpadSubtract") adjustVol(-0.1);
+		if (e.code === "KeyM") audio.toggleMusic();
+		if (e.code === "KeyR") startNewGame();
+		});
 
-window.addEventListener("keyup", e => {
-  if (e.code === "ArrowLeft" || e.code === "KeyA") goLeft = false;
-  if (e.code === "ArrowRight" || e.code === "KeyD") goRight = false;
-  if ((e.code === "Space" || e.code === "KeyW" || e.code === "ArrowUp") && velocityY < -4.5) {
-    velocityY *= 0.52;
+		window.addEventListener("keyup", e => {
+		if (e.code === "ArrowLeft" || e.code === "KeyA") goLeft = false;
+		if (e.code === "ArrowRight" || e.code === "KeyD") goRight = false;
+		if ((e.code === "Space" || e.code === "KeyW" || e.code === "ArrowUp") && velocityY < -4.0) {
+    velocityY *= 0.55;
   }
 });
 // ==================== TOUCH & RESPONSIVE LANDSCAPE SCALER ====================
