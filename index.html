@@ -2,138 +2,274 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+<meta name="theme-color" content="#0d0d14" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="Legend of Leon" />
+<link rel="apple-touch-icon" href="icon-192.png" />
+<link rel="manifest" href="manifest.json" />
+
 <title>The Legend of Leon</title>
 <style>
-  * { box-sizing: border-box; user-select: none; }
-  body {
-    margin: 0;
-    background: #0d0d14;
-    color: #cdd6f4;
-    font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    overflow: hidden;
-  }
-  #frame {
-    position: relative;
-    width: 800px;
-    height: 450px;
-    border: 2px solid #313244;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.65);
-    background: #181825;
-  }
-  canvas {
-    display: block;
-    width: 800px;
-    height: 450px;
-  }
-  #hud {
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    background: rgba(17, 17, 27, 0.65);
-    padding: 9px 15px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    pointer-events: none;
-  }
-  #hud-left { display: flex; align-items: center; gap: 16px; }
-  #hearts { color: #f38ba8; font-size: 18px; font-weight: 800; letter-spacing: 1px; }
-  #level-txt { color: #89dceb; font-size: 14px; font-weight: 700; }
-  #score-txt { color: #f9e2af; font-size: 14px; font-weight: 700; }
-  #powerup-txt { color: #a6e3a1; font-size: 13px; font-weight: 700; }
-  #controls-hint { color: #a6adc8; font-size: 11.5px; }
+	* { box-sizing: border-box; user-select: none; }
+	body {
+	margin: 0;
+	background: #0d0d14;
+	color: #cdd6f4;
+	font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	min-height: 100vh;
+	overflow: hidden;
+	}
+	#frame {
+	position: relative;
+	width: 800px;
+	height: 450px;
+	border: 2px solid #313244;
+	border-radius: 8px;
+	overflow: hidden;
+	box-shadow: 0 20px 60px rgba(0,0,0,0.65);
+	background: #181825;
+	}
+	canvas {
+	display: block;
+	width: 800px;
+	height: 450px;
+	}
+	#hud {
+	position: absolute;
+	top: 0; left: 0; right: 0;
+	background: rgba(17, 17, 27, 0.65);
+	padding: 9px 15px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	pointer-events: none;
+	}
+	#hud-left { display: flex; align-items: center; gap: 16px; }
+	#hearts { color: #f38ba8; font-size: 18px; font-weight: 800; letter-spacing: 1px; }
+	#level-txt { color: #89dceb; font-size: 14px; font-weight: 700; }
+	#score-txt { color: #f9e2af; font-size: 14px; font-weight: 700; }
+	#powerup-txt { color: #a6e3a1; font-size: 13px; font-weight: 700; }
+	#controls-hint { color: #a6adc8; font-size: 11.5px; }
 
-  #title-screen {
-    position: absolute;
-    inset: 0;
-    background: rgba(17, 17, 27, 0.94);
-    padding: 32px 45px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    z-index: 10;
-  }
-  .sub-brand { color: #89dceb; font-size: 13px; font-weight: 700; letter-spacing: 1px; margin-bottom: 4px; }
-  .main-title { color: #f9e2af; font-size: 34px; font-weight: 900; margin-bottom: 2px; }
-  .tag-title { color: #f38ba8; font-size: 14px; font-weight: 700; margin-bottom: 20px; }
-  .story-box {
-    width: 100%;
-    max-width: 640px;
-    min-height: 185px;
-    background: #181825;
-    border: 2px solid #45475a;
-    border-radius: 8px;
-    padding: 20px 24px;
-    font-family: Consolas, "Courier New", monospace;
-    font-size: 14.5px;
-    line-height: 1.55;
-    white-space: pre-wrap;
-    color: #cdd6f4;
-  }
-  .start-prompt {
-    color: #a6e3a1;
-    font-size: 16px;
-    font-weight: 700;
-    margin-top: 22px;
-    animation: pulse 1.2s infinite alternate;
-  }
-  @keyframes pulse { from { opacity: 0.65; } to { opacity: 1; } }
+	#title-screen {
+	position: absolute;
+	inset: 0;
+	background: rgba(17, 17, 27, 0.94);
+	padding: 32px 45px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	z-index: 10;
+	}
+	.sub-brand { color: #89dceb; font-size: 13px; font-weight: 700; letter-spacing: 1px; margin-bottom: 4px; }
+	.main-title { color: #f9e2af; font-size: 34px; font-weight: 900; margin-bottom: 2px; }
+	.tag-title { color: #f38ba8; font-size: 14px; font-weight: 700; margin-bottom: 20px; }
+	.story-box {
+	width: 100%;
+	max-width: 640px;
+	min-height: 185px;
+	background: #181825;
+	border: 2px solid #45475a;
+	border-radius: 8px;
+	padding: 20px 24px;
+	font-family: Consolas, "Courier New", monospace;
+	font-size: 14.5px;
+	line-height: 1.55;
+	white-space: pre-wrap;
+	color: #cdd6f4;
+	}
+	.start-prompt {
+	color: #a6e3a1;
+	font-size: 16px;
+	font-weight: 700;
+	margin-top: 22px;
+	animation: pulse 1.2s infinite alternate;
+	}
+	@keyframes pulse { from { opacity: 0.65; } to { opacity: 1; } }
 
-  #status-banner {
-    position: absolute;
-    top: 50%; left: 50%;
-    transform: translate(-50%, -50%);
-    background: rgba(17, 17, 27, 0.88);
-    border: 1px solid #45475a;
-    border-radius: 10px;
-    padding: 24px 36px;
-    text-align: center;
-    display: none;
-    z-index: 8;
-  }
-  #status-title { font-size: 28px; font-weight: 800; color: #89dceb; }
-  #status-sub { font-size: 15px; color: #cdd6f4; margin-top: 8px; }
+	#status-banner {
+	position: absolute;
+	top: 50%; left: 50%;
+	transform: translate(-50%, -50%);
+	background: rgba(17, 17, 27, 0.88);
+	border: 1px solid #45475a;
+	border-radius: 10px;
+	padding: 24px 36px;
+	text-align: center;
+	display: none;
+	z-index: 8;
+	}
+	#status-title { font-size: 28px; font-weight: 800; color: #89dceb; }
+	#status-sub { font-size: 15px; color: #cdd6f4; margin-top: 8px; }
 
-  #credits-screen {
-    position: absolute;
-    inset: 0;
-    background: rgba(17, 17, 27, 0.68);
-    display: none;
-    overflow: hidden;
-    z-index: 9;
-  }
-  #credits-roll {
-    position: absolute;
-    left: 20px;
-    width: 760px;
-    text-align: center;
-  }
-  .cr-h1 { color: #a6e3a1; font-size: 32px; font-weight: 900; margin-bottom: 6px; }
-  .cr-score { color: #f9e2af; font-size: 18px; font-weight: 700; margin-bottom: 36px; }
-  .cr-title { color: #89dceb; font-size: 22px; font-weight: 700; margin-bottom: 4px; }
-  .cr-sub { color: #cdd6f4; font-size: 13px; margin-bottom: 36px; }
-  .cr-role { color: #f38ba8; font-size: 13px; font-weight: 700; margin-bottom: 5px; }
-  .cr-name { color: #ffffff; font-size: 19px; font-weight: 600; margin-bottom: 26px; }
-  .cr-disc { color: #a6adc8; font-size: 12px; font-style: italic; margin: 16px 0 40px; }
-  .cr-end { color: #f9e2af; font-size: 26px; font-weight: 900; }
-  #credits-footer {
-    position: absolute;
-    bottom: 0; left: 0; right: 0;
-    background: rgba(17, 17, 27, 0.85);
-    padding: 10px;
-    text-align: center;
-    color: #a6e3a1;
-    font-size: 14px;
-    font-weight: 700;
-  }
+	#credits-screen {
+	position: absolute;
+	inset: 0;
+	background: rgba(17, 17, 27, 0.68);
+	display: none;
+	overflow: hidden;
+	z-index: 9;
+	}
+	#credits-roll {
+	position: absolute;
+	left: 20px;
+	width: 760px;
+	text-align: center;
+	}
+	.cr-h1 { color: #a6e3a1; font-size: 32px; font-weight: 900; margin-bottom: 6px; }
+	.cr-score { color: #f9e2af; font-size: 18px; font-weight: 700; margin-bottom: 36px; }
+	.cr-title { color: #89dceb; font-size: 22px; font-weight: 700; margin-bottom: 4px; }
+	.cr-sub { color: #cdd6f4; font-size: 13px; margin-bottom: 36px; }
+	.cr-role { color: #f38ba8; font-size: 13px; font-weight: 700; margin-bottom: 5px; }
+	.cr-name { color: #ffffff; font-size: 19px; font-weight: 600; margin-bottom: 26px; }
+	.cr-disc { color: #a6adc8; font-size: 12px; font-style: italic; margin: 16px 0 40px; }
+	.cr-end { color: #f9e2af; font-size: 26px; font-weight: 900; }
+	#credits-footer {
+	position: absolute;
+	bottom: 0; left: 0; right: 0;
+	background: rgba(17, 17, 27, 0.85);
+	padding: 10px;
+	text-align: center;
+	color: #a6e3a1;
+	font-size: 14px;
+	font-weight: 700;
+	}
+	html, body {
+	position: fixed;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	touch-action: none;
+	overscroll-behavior: none;
+	}
+	canvas {
+	width: 100%;
+	height: 100%;
+	}
+
+	/* Touch Controls Layer */
+	#touch-ui {
+	position: absolute;
+	inset: 0;
+	pointer-events: none;
+	z-index: 7;
+	display: none;
+	}
+	.t-btn {
+	pointer-events: auto;
+	background: rgba(24, 24, 37, 0.72);
+	border: 2px solid #89b4fa;
+	color: #cdd6f4;
+	font-family: inherit;
+	font-weight: 800;
+	border-radius: 12px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	box-shadow: 0 4px 14px rgba(0,0,0,0.45);
+	transition: transform 0.05s, background 0.08s;
+	}
+	.t-btn:active, .t-btn.active {
+	transform: scale(0.93);
+	background: rgba(137, 180, 250, 0.35);
+	border-color: #ffffff;
+	}
+
+	/* Left D-Pad (Thumb-Slide Capable) */
+	#dpad-zone {
+	position: absolute;
+	bottom: 18px;
+	left: 20px;
+	display: flex;
+	gap: 14px;
+	pointer-events: auto;
+	}
+	.dpad-btn {
+	width: 64px;
+	height: 58px;
+	font-size: 22px;
+	}
+
+	/* Right Action Cluster */
+	#action-zone {
+	position: absolute;
+	bottom: 18px;
+	right: 20px;
+	display: flex;
+	align-items: flex-end;
+	gap: 12px;
+	pointer-events: auto;
+	}
+	#btn-talk {
+	width: 54px;
+	height: 46px;
+	font-size: 12px;
+	border-color: #cba6f7;
+	color: #cba6f7;
+	}
+	#btn-fire {
+	width: 60px;
+	height: 54px;
+	font-size: 13px;
+	border-color: #f38ba8;
+	color: #f38ba8;
+	}
+	#btn-jump {
+	width: 72px;
+	height: 64px;
+	font-size: 14px;
+	border-color: #a6e3a1;
+	color: #a6e3a1;
+	}
+
+	/* Top-Right Compact Mute & Reset */
+	#top-touch-utils {
+	position: absolute;
+	top: 44px;
+	right: 14px;
+	display: flex;
+	gap: 8px;
+	pointer-events: auto;
+	}
+	.util-pill {
+	padding: 6px 10px;
+	font-size: 11px;
+	border-radius: 8px;
+	border-color: #585b70;
+	}
+
+	/* Portrait Warning Overlay on Mobile */
+	#rotate-hint {
+	display: none;
+	position: fixed;
+	inset: 0;
+	background: rgba(13, 13, 20, 0.96);
+	z-index: 999;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	text-align: center;
+	padding: 24px;
+	color: #f9e2af;
+	font-weight: 800;
+	font-size: 18px;
+	}
+	@media (pointer: coarse) and (orientation: portrait) {
+	#rotate-hint { display: flex; }
+	}
+	@media (pointer: coarse) {
+	#controls-hint { display: none; }
+	#touch-ui { display: block; }
+	}
+
 </style>
 </head>
 <body>
@@ -141,22 +277,41 @@
 <div id="frame">
   <canvas id="game" width="800" height="450"></canvas>
 
-  <div id="hud">
-    <div id="hud-left">
-      <span id="hearts">♥ ♥ ♥</span>
-      <span id="level-txt">Lvl 1/5</span>
-      <span id="score-txt">Score: 0 (Best: 0)</span>
-      <span id="powerup-txt"></span>
-    </div>
-    <div id="controls-hint">A/D: Move | Space: Jump | E: Talk | F: Shoot | M: Music | +/-: Vol | R: Reset</div>
-  </div>
+	<div id="hud">
+		<div id="hud-left">
+			<span id="hearts">♥ ♥ ♥</span>
+			<span id="level-txt">Lvl 1/5</span>
+			<span id="score-txt">Score: 0 (Best: 0)</span>
+			<span id="powerup-txt"></span>
+		</div>
+		<div id="controls-hint">A/D: Move | Space: Jump | E: Talk | F: Shoot | M: Music | +/-: Vol | R: Reset</div>
+	</div>
+
+	<!-- Touch Controls Overlay -->
+	<div id="touch-ui">
+		<div id="top-touch-utils">
+			<button id="t-mute" class="t-btn util-pill" type="button">SND</button>
+			<button id="t-reset" class="t-btn util-pill" type="button">RESET</button>
+		</div>
+
+		<div id="dpad-zone">
+			<button id="t-left" class="t-btn dpad-btn" type="button">◀</button>
+			<button id="t-right" class="t-btn dpad-btn" type="button">▶</button>
+		</div>
+
+		<div id="action-zone">
+			<button id="btn-talk" class="t-btn" type="button">TALK</button>
+			<button id="btn-fire" class="t-btn" type="button">FIRE</button>
+			<button id="btn-jump" class="t-btn" type="button">JUMP</button>
+		</div>
+	</div>
 
   <div id="title-screen">
     <div class="sub-brand">APLEONA HEADQUARTERS PRESENTS</div>
     <div class="main-title">THE LEGEND OF LEON</div>
     <div class="tag-title">~ THE LAST PARKING SPOT ~</div>
     <div id="story-text" class="story-box"></div>
-    <div class="start-prompt">▶ PRESS ENTER OR SPACE TO CLOCK IN ◀</div>
+	  <div class="start-prompt">▶ PRESS ENTER, SPACE, OR TAP TO CLOCK IN ◀</div>
   </div>
 
   <div id="status-banner">
@@ -187,11 +342,20 @@
       <div class="cr-disc">NO END USERS WERE HARMED IN THE MAKING OF THIS DEMAND DRIVEN PROJECT.</div>
       <div class="cr-end">THE END</div>
     </div>
-    <div id="credits-footer">PRESS R OR ENTER TO PLAY AGAIN</div>
+	  <div id="credits-footer">PRESS R, ENTER, OR TAP TO PLAY AGAIN</div>
   </div>
 </div>
 
+<div id="rotate-hint">
+  <div style="font-size:36px; margin-bottom:12px;">📱↻</div>
+  <div>ROTATE DEVICE TO LANDSCAPE</div>
+  <div style="color:#a6adc8; font-size:13px; font-weight:600; margin-top:6px;">The Legend of Leon plays in horizontal widescreen</div>
+</div>
+
 <script>
+
+
+  <script>
 // ==================== PART 1: RETRO AUDIO ENGINE ====================
 class RetroAudio {
   constructor() {
@@ -1350,6 +1514,136 @@ window.addEventListener("keyup", e => {
     velocityY *= 0.52;
   }
 });
+// ==================== TOUCH & RESPONSIVE LANDSCAPE SCALER ====================
+function fitLeonFrame() {
+  const frame = document.getElementById("frame");
+  const vw = window.visualViewport ? window.visualViewport.width : window.innerWidth;
+  const vh = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+  const targetRatio = 800 / 450;
+
+  let w = vw;
+  let h = vw / targetRatio;
+  if (h > vh) {
+    h = vh;
+    w = vh * targetRatio;
+  }
+  frame.style.width = `${Math.floor(w)}px`;
+  frame.style.height = `${Math.floor(h)}px`;
+}
+window.addEventListener("resize", fitLeonFrame);
+if (window.visualViewport) window.visualViewport.addEventListener("resize", fitLeonFrame);
+fitLeonFrame();
+setTimeout(fitLeonFrame, 150);
+
+// Tap Title Screen to advance story / start game
+document.getElementById("title-screen").addEventListener("pointerdown", e => {
+  e.preventDefault();
+  if (!storyFinishedTyping) {
+    storyFinishedTyping = true;
+    document.getElementById("story-text").textContent = INTRO_STORY;
+  } else {
+    isTitleScreen = false;
+    document.getElementById("title-screen").style.display = "none";
+    startNewGame();
+  }
+});
+
+// Tap Game Over Banner or Credits Screen to restart
+document.getElementById("status-banner").addEventListener("pointerdown", e => {
+  if (!isGameOver) return;
+  e.preventDefault();
+  startNewGame();
+});
+document.getElementById("credits-screen").addEventListener("pointerdown", e => {
+  if (!isCreditsMode) return;
+  e.preventDefault();
+  startNewGame();
+});
+
+// Smooth Thumb-Sliding D-Pad (Left / Right)
+const dpadZone = document.getElementById("dpad-zone");
+const btnLeft = document.getElementById("t-left");
+const btnRight = document.getElementById("t-right");
+let dpadPointerId = null;
+
+function updateDpadFromPoint(clientX) {
+  const rect = dpadZone.getBoundingClientRect();
+  const midX = rect.left + rect.width / 2;
+  if (clientX < midX) {
+    goLeft = true; goRight = false;
+    btnLeft.classList.add("active"); btnRight.classList.remove("active");
+  } else {
+    goRight = true; goLeft = false;
+    btnRight.classList.add("active"); btnLeft.classList.remove("active");
+  }
+}
+
+dpadZone.addEventListener("pointerdown", e => {
+  e.preventDefault();
+  dpadZone.setPointerCapture(e.pointerId);
+  dpadPointerId = e.pointerId;
+  updateDpadFromPoint(e.clientX);
+});
+dpadZone.addEventListener("pointermove", e => {
+  if (e.pointerId !== dpadPointerId) return;
+  e.preventDefault();
+  updateDpadFromPoint(e.clientX);
+});
+function releaseDpad(e) {
+  if (e.pointerId !== dpadPointerId) return;
+  dpadPointerId = null;
+  goLeft = false; goRight = false;
+  btnLeft.classList.remove("active"); btnRight.classList.remove("active");
+}
+dpadZone.addEventListener("pointerup", releaseDpad);
+dpadZone.addEventListener("pointercancel", releaseDpad);
+
+// Jump Button (with variable jump-height cut on release)
+const btnJump = document.getElementById("btn-jump");
+btnJump.addEventListener("pointerdown", e => {
+  e.preventDefault();
+  btnJump.classList.add("active");
+  if (!isGameOver && !isLevelTransition) {
+    if (isGrounded) {
+      velocityY = JumpStrength; isGrounded = false; audio.playJump();
+    } else if (execModeFrames > 0) {
+      velocityY = JumpStrength * 0.72; audio.playJump();
+    }
+  }
+});
+function releaseJump() {
+  btnJump.classList.remove("active");
+  if (velocityY < -4.0) velocityY *= 0.55;
+}
+btnJump.addEventListener("pointerup", releaseJump);
+btnJump.addEventListener("pointercancel", releaseJump);
+
+// Fire & Talk Buttons
+document.getElementById("btn-fire").addEventListener("pointerdown", e => {
+  e.preventDefault();
+  fireLaser();
+});
+document.getElementById("btn-talk").addEventListener("pointerdown", e => {
+  e.preventDefault();
+  if (!isGameOver && !isLevelTransition) interactNpc();
+});
+
+// Top-Right Mute & Reset Pills
+document.getElementById("t-mute").addEventListener("pointerdown", e => {
+  e.preventDefault();
+  audio.toggleMusic();
+  e.currentTarget.textContent = audio.isMuted ? "MUTED" : "SND";
+});
+document.getElementById("t-reset").addEventListener("pointerdown", e => {
+  e.preventDefault();
+  startNewGame();
+});
+
+// Register Service Worker for PWA Installability
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("./sw.js").catch(() => {});
+}
+
 </script>
 </body>
 </html>
