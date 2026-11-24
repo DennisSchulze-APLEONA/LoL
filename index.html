@@ -183,49 +183,49 @@
 	border-color: #ffffff;
 	}
 
-	/* Left D-Pad (Thumb-Slide Capable) */
+	/* Left D-Pad (Raised safely above bottom gesture bar) */
 	#dpad-zone {
 	position: absolute;
-	bottom: 18px;
-	left: 20px;
+	bottom: 24px;
+	left: 24px;
 	display: flex;
-	gap: 14px;
+	gap: 12px;
 	pointer-events: auto;
 	}
 	.dpad-btn {
-	width: 64px;
-	height: 58px;
-	font-size: 22px;
+	width: 62px;
+	height: 54px;
+	font-size: 20px;
 	}
 
 	/* Right Action Cluster */
 	#action-zone {
 	position: absolute;
-	bottom: 18px;
-	right: 20px;
+	bottom: 24px;
+	right: 24px;
 	display: flex;
 	align-items: flex-end;
-	gap: 12px;
+	gap: 10px;
 	pointer-events: auto;
 	}
 	#btn-talk {
-	width: 54px;
-	height: 46px;
-	font-size: 12px;
+	width: 50px;
+	height: 44px;
+	font-size: 11px;
 	border-color: #cba6f7;
 	color: #cba6f7;
 	}
 	#btn-fire {
-	width: 60px;
-	height: 54px;
-	font-size: 13px;
+	width: 56px;
+	height: 50px;
+	font-size: 12px;
 	border-color: #f38ba8;
 	color: #f38ba8;
 	}
 	#btn-jump {
-	width: 72px;
-	height: 64px;
-	font-size: 14px;
+	width: 68px;
+	height: 58px;
+	font-size: 13px;
 	border-color: #a6e3a1;
 	color: #a6e3a1;
 	}
@@ -1535,13 +1535,17 @@ if (window.visualViewport) window.visualViewport.addEventListener("resize", fitL
 fitLeonFrame();
 setTimeout(fitLeonFrame, 150);
 
-// Tap Title Screen to advance story / start game
+// Tap Title Screen to advance story / start game + enter fullscreen on mobile
 document.getElementById("title-screen").addEventListener("pointerdown", e => {
   e.preventDefault();
   if (!storyFinishedTyping) {
     storyFinishedTyping = true;
     document.getElementById("story-text").textContent = INTRO_STORY;
   } else {
+    const el = document.documentElement;
+    if (!document.fullscreenElement && el.requestFullscreen && ("ontouchstart" in window)) {
+      el.requestFullscreen().catch(() => {});
+    }
     isTitleScreen = false;
     document.getElementById("title-screen").style.display = "none";
     startNewGame();
@@ -1560,81 +1564,96 @@ document.getElementById("credits-screen").addEventListener("pointerdown", e => {
   startNewGame();
 });
 
-// Smooth Thumb-Sliding D-Pad (Left / Right)
+// =========================================================================
+// TRUE MULTI-TOUCH CONTROLLER (Simultaneous Left/Right + Jump + Fire + Talk)
+// =========================================================================
 const dpadZone = document.getElementById("dpad-zone");
 const btnLeft = document.getElementById("t-left");
 const btnRight = document.getElementById("t-right");
-let dpadPointerId = null;
-
-function updateDpadFromPoint(clientX) {
-  const rect = dpadZone.getBoundingClientRect();
-  const midX = rect.left + rect.width / 2;
-  if (clientX < midX) {
-    goLeft = true; goRight = false;
-    btnLeft.classList.add("active"); btnRight.classList.remove("active");
-  } else {
-    goRight = true; goLeft = false;
-    btnRight.classList.add("active"); btnLeft.classList.remove("active");
-  }
-}
-
-dpadZone.addEventListener("pointerdown", e => {
-  e.preventDefault();
-  dpadZone.setPointerCapture(e.pointerId);
-  dpadPointerId = e.pointerId;
-  updateDpadFromPoint(e.clientX);
-});
-dpadZone.addEventListener("pointermove", e => {
-  if (e.pointerId !== dpadPointerId) return;
-  e.preventDefault();
-  updateDpadFromPoint(e.clientX);
-});
-function releaseDpad(e) {
-  if (e.pointerId !== dpadPointerId) return;
-  dpadPointerId = null;
-  goLeft = false; goRight = false;
-  btnLeft.classList.remove("active"); btnRight.classList.remove("active");
-}
-dpadZone.addEventListener("pointerup", releaseDpad);
-dpadZone.addEventListener("pointercancel", releaseDpad);
-
-// Jump Button (with variable jump-height cut on release)
 const btnJump = document.getElementById("btn-jump");
-btnJump.addEventListener("pointerdown", e => {
-  e.preventDefault();
-  btnJump.classList.add("active");
-  if (!isGameOver && !isLevelTransition) {
+const btnFire = document.getElementById("btn-fire");
+const btnTalk = document.getElementById("btn-talk");
+
+let wasJumpHeld = false;
+let wasFireHeld = false;
+let wasTalkHeld = false;
+
+function hitTest(el, x, y, pad = 10) {
+  const r = el.getBoundingClientRect();
+  return x >= r.left - pad && x <= r.right + pad && y >= r.top - pad && y <= r.bottom + pad;
+}
+
+function syncMultiTouch(e) {
+  if (e.cancelable) e.preventDefault();
+
+  let leftDown = false;
+  let rightDown = false;
+  let jumpDown = false;
+  let fireDown = false;
+  let talkDown = false;
+
+  for (let i = 0; i < e.touches.length; i++) {
+    const t = e.touches[i];
+    const x = t.clientX;
+    const y = t.clientY;
+
+    // Check D-Pad zone (supports sliding thumb smoothly between Left & Right)
+    if (hitTest(dpadZone, x, y, 16)) {
+      const r = dpadZone.getBoundingClientRect();
+      if (x < r.left + r.width / 2) leftDown = true;
+      else rightDown = true;
+    }
+
+    if (hitTest(btnJump, x, y, 12)) jumpDown = true;
+    if (hitTest(btnFire, x, y, 12)) fireDown = true;
+    if (hitTest(btnTalk, x, y, 12)) talkDown = true;
+  }
+
+  // Apply Horizontal Movement
+  goLeft = leftDown;
+  goRight = rightDown;
+  btnLeft.classList.toggle("active", leftDown);
+  btnRight.classList.toggle("active", rightDown);
+
+  // Apply Jump (Edge-triggered on press, variable height cut on release)
+  btnJump.classList.toggle("active", jumpDown);
+  if (jumpDown && !wasJumpHeld && !isGameOver && !isLevelTransition) {
     if (isGrounded) {
       velocityY = JumpStrength; isGrounded = false; audio.playJump();
     } else if (execModeFrames > 0) {
       velocityY = JumpStrength * 0.72; audio.playJump();
     }
+  } else if (!jumpDown && wasJumpHeld && velocityY < -4.0) {
+    velocityY *= 0.55;
   }
-});
-function releaseJump() {
-  btnJump.classList.remove("active");
-  if (velocityY < -4.0) velocityY *= 0.55;
-}
-btnJump.addEventListener("pointerup", releaseJump);
-btnJump.addEventListener("pointercancel", releaseJump);
+  wasJumpHeld = jumpDown;
 
-// Fire & Talk Buttons
-document.getElementById("btn-fire").addEventListener("pointerdown", e => {
-  e.preventDefault();
-  fireLaser();
-});
-document.getElementById("btn-talk").addEventListener("pointerdown", e => {
-  e.preventDefault();
-  if (!isGameOver && !isLevelTransition) interactNpc();
-});
+  // Apply Fire (Edge-triggered)
+  btnFire.classList.toggle("active", fireDown);
+  if (fireDown && !wasFireHeld) fireLaser();
+  wasFireHeld = fireDown;
+
+  // Apply Talk (Edge-triggered)
+  btnTalk.classList.toggle("active", talkDown);
+  if (talkDown && !wasTalkHeld && !isGameOver && !isLevelTransition) interactNpc();
+  wasTalkHeld = talkDown;
+}
+
+const touchUi = document.getElementById("touch-ui");
+touchUi.addEventListener("touchstart", syncMultiTouch, { passive: false });
+touchUi.addEventListener("touchmove", syncMultiTouch, { passive: false });
+touchUi.addEventListener("touchend", syncMultiTouch, { passive: false });
+touchUi.addEventListener("touchcancel", syncMultiTouch, { passive: false });
 
 // Top-Right Mute & Reset Pills
 document.getElementById("t-mute").addEventListener("pointerdown", e => {
+  e.stopPropagation();
   e.preventDefault();
   audio.toggleMusic();
   e.currentTarget.textContent = audio.isMuted ? "MUTED" : "SND";
 });
 document.getElementById("t-reset").addEventListener("pointerdown", e => {
+  e.stopPropagation();
   e.preventDefault();
   startNewGame();
 });
